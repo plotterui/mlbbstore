@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLOTTERSTORE</title>
+<meta name="description" content="PLOTTERSTORE - top up diamond Mobile Legends tanpa biaya admin. Bayar via DANA, GoPay, atau transfer BCA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: satu kolom di HP, grid paket 2 kolom (3-4 di layar lebar), form order menempel di bawah paket. Satu tampilan gelap emas-hitam sesuai permintaan pemilik toko. */
+:root {
+  --black: #0b0b0c;
+  --surface: #151514;
+  --surface-2: #1c1b19;
+  --line: #3a3320;
+  --gold: #d4af37;
+  --gold-lt: #f0c75e;
+  --text: #ffffff;
+  --muted: #b8b8b8;
+  --gem: #85b7eb;
+  --wa: #25d366;
+  --err: #ff8a80;
+  --font-display: "Cinzel", "Times New Roman", serif;
+  --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: 0 40px;
+}
+.wrap { max-width: 960px; margin-inline: auto; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold-lt); outline-offset: 3px; }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
+.brand svg { width: 30px; height: 28px; flex: none; }
+.brand span { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: 0.08em; }
+.top a.pill { font-size: 14px; font-weight: 600; text-decoration: none; color: var(--black); background: var(--gold); padding: 8px 16px; border-radius: 6px; white-space: nowrap; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1fr; gap: 24px; padding-block: 36px 32px; align-items: center; }
+.hero-gem { width: 112px; margin-inline: auto; }
+.hero-gem svg { width: 100%; height: auto; display: block; }
+.tag { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-lt); border: 1px solid var(--gold); border-radius: 4px; padding: 3px 10px; margin-bottom: 14px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 7.5vw, 44px); line-height: 1.15; margin: 0 0 12px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--gold-lt); }
+.lead { color: var(--muted); max-width: 52ch; margin: 0 0 22px; }
+.hero-copy { text-align: center; }
+.hero-copy .lead { margin-inline: auto; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-body); font-weight: 600; font-size: 16px; text-decoration: none; background: var(--gold); color: var(--black); border: 0; border-radius: 8px; padding: 13px 26px; cursor: pointer; }
+.btn:hover { background: var(--gold-lt); }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.pay { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 22px 0 0; padding: 0; list-style: none; }
+.pay li { font-size: 13px; font-weight: 500; border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: 3px 12px; color: var(--text); }
+
+/* sections */
+section { padding-block: 28px; border-top: 1px solid var(--line); }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 0.04em; margin: 0 0 6px; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+
+/* package grid */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.pkg { position: relative; width: 100%; text-align: left; font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 14px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pkg:hover { border-color: var(--gold); }
+.pkg[aria-pressed="true"] { border-color: var(--gold-lt); background: var(--surface-2); box-shadow: 0 0 0 1px var(--gold-lt) inset; }
+.pkg .ico { width: 22px; height: 22px; margin-bottom: 4px; }
+.pkg .amt { font-weight: 600; font-size: 18px; font-variant-numeric: tabular-nums; }
+.pkg .amt small { font-weight: 500; font-size: 14px; color: var(--gold-lt); }
+.pkg .tot { font-size: 13px; color: var(--muted); }
+.pkg .price { margin-top: 6px; font-weight: 600; font-size: 18px; color: var(--gold-lt); font-variant-numeric: tabular-nums; }
+.badge { position: absolute; top: -10px; right: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--gold); color: var(--black); padding: 2px 9px; border-radius: 4px; }
+
+/* order form */
+.order { display: grid; grid-template-columns: 1fr; gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--gold); border-radius: 12px; padding: 18px; }
+.row2 { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 10px; }
+label { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.field { margin-bottom: 14px; min-width: 0; }
+input, select { width: 100%; font: inherit; font-size: 16px; color: var(--text); background: var(--black); border: 1px solid #4a4128; border-radius: 8px; padding: 11px 12px; }
+input::placeholder { color: #8c8c8c; }
+.summary { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; margin-bottom: 14px; }
+.summary .what { color: var(--muted); font-size: 15px; min-width: 0; }
+.summary .what b { color: var(--text); font-weight: 600; }
+.summary .sum-price { font-weight: 700; font-size: 22px; color: var(--gold-lt); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.card .btn { width: 100%; }
+.err { color: var(--err); font-size: 14px; min-height: 1.4em; margin: 10px 0 0; }
+.note { color: var(--muted); font-size: 14px; margin: 8px 0 0; }
+.find { font-size: 14px; color: var(--muted); margin: 0; }
+.find b { color: var(--text); font-weight: 600; }
+
+/* steps + perks */
+.steps { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { counter-increment: s; display: flex; gap: 14px; align-items: flex-start; }
+.steps li::before { content: counter(s); flex: none; width: 30px; height: 30px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--gold-lt); }
+.steps b { font-weight: 600; }
+.steps span { display: block; color: var(--muted); font-size: 15px; }
+.perks { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.perks li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.perks b { display: block; font-weight: 600; color: var(--gold-lt); margin-bottom: 2px; }
+.perks span { color: var(--muted); font-size: 15px; }
+
+/* faq */
+details { border-bottom: 1px solid var(--line); padding-block: 12px; }
+summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--gold-lt); font-size: 20px; line-height: 1; }
+details[open] summary::after { content: "\2212"; }
+details p { color: var(--muted); margin: 8px 0 0; font-size: 15px; max-width: 62ch; }
+
+footer { border-top: 1px solid var(--line); padding-top: 22px; color: var(--muted); font-size: 13px; text-align: center; }
+footer a { color: var(--gold-lt); }
+
+@media (min-width: 640px) {
+  body { padding-inline: 24px; }
+  .hero { grid-template-columns: 1fr 200px; gap: 40px; padding-block: 56px 44px; }
+  .hero-copy { text-align: left; order: 1; }
+  .hero-copy .lead { margin-inline: 0; }
+  .hero-gem { order: 2; width: 200px; }
+  .pay { justify-content: flex-start; }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .order { grid-template-columns: minmax(0, 1fr) minmax(0, 360px); align-items: start; }
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .steps li { flex-direction: column; }
+  .perks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 900px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="gem" viewBox="0 0 120 110">
+      <polygon points="30,10 90,10 78,38 42,38" fill="#85b7eb" fill-opacity="0.6"/>
+      <polygon points="30,10 42,38 8,38" fill="#85b7eb" fill-opacity="0.3"/>
+      <polygon points="90,10 112,38 78,38" fill="#85b7eb" fill-opacity="0.3"/>
+      <polygon points="8,38 42,38 60,104" fill="#85b7eb" fill-opacity="0.45"/>
+      <polygon points="42,38 78,38 60,104" fill="#85b7eb" fill-opacity="0.8"/>
+      <polygon points="78,38 112,38 60,104" fill="#85b7eb" fill-opacity="0.35"/>
+      <polygon points="30,10 90,10 112,38 60,104 8,38" fill="none" stroke="#d4af37" stroke-width="3" stroke-linejoin="round"/>
+      <polyline points="8,38 42,38 30,10 42,38 60,104 78,38 90,10 78,38 112,38" fill="none" stroke="#d4af37" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.8"/>
+    </symbol>
+    <symbol id="wa" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 0-8.45 15.07L2 22l5.05-1.55A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.17 8.17 0 0 1-4.16-1.14l-.3-.18-3 .92.98-2.92-.2-.31A8.2 8.2 0 1 1 12.04 20.1Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.09-.39-.13-.56.12-.16.25-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.24-.74-.66-1.24-1.47-1.38-1.72-.14-.25-.02-.38.1-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.55c.12.16 1.73 2.64 4.2 3.7.59.26 1.05.41 1.4.52.59.19 1.13.16 1.55.1.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.18-.06-.1-.23-.16-.48-.29Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#atas" aria-label="PLOTTERSTORE">
+      <svg aria-hidden="true"><use href="#gem"/></svg>
+      <span>PLOTTERSTORE</span>
+    </a>
+    <a class="pill" href="#order">Order</a>
+  </header>
+
+  <main id="atas">
+    <div class="hero">
+      <div class="hero-copy">
+        <span class="tag">Tanpa biaya admin</span>
+        <h1>Top up diamond Mobile Legends <em>lebih hemat</em></h1>
+        <p class="lead">Bayar langsung via DANA, GoPay, atau transfer BCA. Harga yang Anda lihat adalah harga yang Anda bayar, tanpa tambahan biaya admin.</p>
+        <a class="btn" href="#paket">Lihat daftar harga</a>
+        <ul class="pay" aria-label="Metode pembayaran">
+          <li>DANA</li><li>GoPay</li><li>Transfer BCA</li>
+        </ul>
+      </div>
+      <div class="hero-gem" aria-hidden="true">
+        <svg viewBox="0 0 120 110"><use href="#gem"/></svg>
+      </div>
+    </div>
+
+    <section id="paket">
+      <h2>Daftar harga diamond</h2>
+      <p class="sub">Ketuk paket untuk memilih. Angka kecil di samping jumlah adalah bonus diamond.</p>
+      <ul class="grid" id="grid"></ul>
+    </section>
+
+    <section id="order">
+      <h2>Form order</h2>
+      <p class="sub">Isi data akun, lalu kirim pesanan ke WhatsApp kami. Pembayaran dikonfirmasi lewat chat.</p>
+      <div class="order">
+        <form class="card" id="form" novalidate>
+          <div class="row2">
+            <div class="field">
+              <label for="uid">User ID</label>
+              <input id="uid" name="uid" inputmode="numeric" autocomplete="off" placeholder="Contoh: 12345678" maxlength="12">
+            </div>
+            <div class="field">
+              <label for="zid">Zone ID</label>
+              <input id="zid" name="zid" inputmode="numeric" autocomplete="off" placeholder="1234" maxlength="6">
+            </div>
+          </div>
+          <div class="field">
+            <label for="pkg">Paket</label>
+            <select id="pkg" name="pkg"></select>
+          </div>
+          <div class="field">
+            <label for="pay">Bayar via</label>
+            <select id="pay" name="pay">
+              <option>DANA</option>
+              <option>GoPay</option>
+              <option>Transfer BCA</option>
+            </select>
+          </div>
+          <div class="summary">
+            <div class="what" id="what"></div>
+            <div class="sum-price" id="sum"></div>
+          </div>
+          <a class="btn" id="send" href="https://wa.me/6281249103377" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true"><use href="#wa"/></svg>
+            Kirim pesanan ke WhatsApp
+          </a>
+          <p class="err" id="err" role="alert"></p>
+          <p class="note">Formulir ini membuka WhatsApp dengan pesan yang sudah terisi. Pesanan baru dihitung setelah Anda menekan kirim di WhatsApp.</p>
+        </form>
+        <p class="find">Cara menemukan ID: buka Mobile Legends, ketuk foto profil di pojok kiri atas. <b>User ID</b> dan <b>Zone ID</b> tampil di bawah nama akun, dalam format <b>ID (Zone)</b>.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Cara order</h2>
+      <p class="sub">Tiga langkah, semuanya dari HP.</p>
+      <ol class="steps">
+        <li><div><b>Pilih paket dan isi ID</b><span>Masukkan User ID dan Zone ID akun Mobile Legends Anda.</span></div></li>
+        <li><div><b>Kirim ke WhatsApp</b><span>Pesan order terisi otomatis. Lanjutkan pembayaran lewat DANA, GoPay, atau BCA.</span></div></li>
+        <li><div><b>Diamond masuk ke akun</b><span>Kami proses setelah pembayaran dikonfirmasi.</span></div></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Kenapa PLOTTERSTORE</h2>
+      <ul class="perks" style="margin-top:14px">
+        <li><b>Tanpa biaya admin</b><span>Pembayaran langsung ke e-wallet atau rekening, tidak ada biaya tambahan.</span></li>
+        <li><b>Harga jelas</b><span>Semua harga tertulis di halaman ini. Tidak ada tarif tersembunyi.</span></li>
+        <li><b>Order lewat chat</b><span>Ada orang yang membalas, jadi pertanyaan Anda bisa langsung ditanyakan.</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Pertanyaan umum</h2>
+      <div style="margin-top:14px">
+        <details><summary>Apa yang saya butuhkan untuk order?</summary><p>User ID dan Zone ID akun Mobile Legends Anda. Kami tidak meminta password atau kode verifikasi akun.</p></details>
+        <details><summary>Bagaimana cara bayarnya?</summary><p>Lewat DANA, GoPay, atau transfer BCA. Detail tujuan pembayaran dikirim di chat WhatsApp setelah Anda mengirim pesanan.</p></details>
+        <details><summary>Bagaimana kalau salah isi ID?</summary><p>Periksa lagi User ID dan Zone ID sebelum membayar. Diamond yang sudah terkirim ke ID yang salah tidak bisa dipindahkan.</p></details>
+        <details><summary>Apakah ini situs resmi Moonton?</summary><p>Bukan. PLOTTERSTORE adalah toko reseller diamond Mobile Legends yang berdiri sendiri.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>PLOTTERSTORE &middot; Reseller diamond Mobile Legends: Bang Bang. Bukan situs resmi dan tidak berafiliasi dengan Moonton.</p>
+    <p><a href="https://wa.me/6281249103377" target="_blank" rel="noopener noreferrer">Hubungi via WhatsApp</a></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var PHONE = "6281249103377";
+  var PKGS = [
+    { id: "40",   base: 40,   bonus: 4,   price: 13100 },
+    { id: "53",   base: 53,   bonus: 6,   price: 17500 },
+    { id: "77",   base: 77,   bonus: 8,   price: 25200 },
+    { id: "154",  base: 154,  bonus: 16,  price: 50400, hot: true },
+    { id: "217",  base: 217,  bonus: 23,  price: 71200 },
+    { id: "256",  base: 256,  bonus: 40,  price: 87600 },
+    { id: "367",  base: 367,  bonus: 41,  price: 119900 },
+    { id: "503",  base: 503,  bonus: 65,  price: 163400 },
+    { id: "774",  base: 774,  bonus: 101, price: 249400 },
+    { id: "1708", base: 1708, bonus: 302, price: 542200 },
+    { id: "wdp",  name: "Weekly Diamond Pass", price: 32000, pass: true }
+  ];
+  var current = PKGS[3];
+
+  var grid = document.getElementById("grid");
+  var sel = document.getElementById("pkg");
+  var what = document.getElementById("what");
+  var sum = document.getElementById("sum");
+  var send = document.getElementById("send");
+  var err = document.getElementById("err");
+  var uid = document.getElementById("uid");
+  var zid = document.getElementById("zid");
+  var pay = document.getElementById("pay");
+
+  function rp(n) { return "Rp " + n.toLocaleString("id-ID"); }
+  function label(p) { return p.pass ? p.name : p.base + " +" + p.bonus; }
+
+  function render() {
+    grid.innerHTML = "";
+    sel.innerHTML = "";
+    PKGS.forEach(function (p) {
+      var li = document.createElement("li");
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "pkg";
+      b.setAttribute("data-id", p.id);
+      b.setAttribute("aria-pressed", p === current ? "true" : "false");
+      var head = p.pass
+        ? '<span class="amt">Weekly Pass</span><span class="tot">Diamond harian 7 hari</span>'
+        : '<span class="amt">' + p.base + ' <small>+' + p.bonus + '</small></span><span class="tot">Total ' + (p.base + p.bonus) + ' diamond</span>';
+      b.innerHTML = (p.hot ? '<span class="badge">Terlaris</span>' : "") +
+        '<svg class="ico" aria-hidden="true" viewBox="0 0 120 110"><use href="#gem"/></svg>' +
+        head + '<span class="price">' + rp(p.price) + "</span>";
+      b.addEventListener("click", function () { choose(p); });
+      li.appendChild(b);
+      grid.appendChild(li);
+
+      var o = document.createElement("option");
+      o.value = p.id;
+      o.textContent = label(p) + " - " + rp(p.price);
+      sel.appendChild(o);
+    });
+    sel.value = current.id;
+    update();
+  }
+
+  function choose(p) {
+    current = p;
+    sel.value = p.id;
+    Array.prototype.forEach.call(grid.querySelectorAll(".pkg"), function (el) {
+      el.setAttribute("aria-pressed", el.getAttribute("data-id") === p.id ? "true" : "false");
+    });
+    update();
+    var o = document.getElementById("order");
+    if (o && o.scrollIntoView) o.scrollIntoView({ block: "start" });
+  }
+
+  function message() {
+    return "Halo PLOTTERSTORE, saya mau order diamond.\n" +
+      "Paket: " + label(current) + " (" + rp(current.price) + ")\n" +
+      "User ID: " + uid.value.trim() + "\n" +
+      "Zone ID: " + zid.value.trim() + "\n" +
+      "Bayar via: " + pay.value;
+  }
+
+  function update() {
+    what.innerHTML = "<b>" + label(current) + "</b><br>" +
+      (current.pass ? "Weekly Diamond Pass" : "Total " + (current.base + current.bonus) + " diamond");
+    sum.textContent = rp(current.price);
+    send.setAttribute("href", "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(message()));
+  }
+
+  sel.addEventListener("change", function () {
+    var found = PKGS.filter(function (p) { return p.id === sel.value; })[0];
+    if (found) {
+      current = found;
+      Array.prototype.forEach.call(grid.querySelectorAll(".pkg"), function (el) {
+        el.setAttribute("aria-pressed", el.getAttribute("data-id") === found.id ? "true" : "false");
+      });
+      update();
+    }
+  });
+  [uid, zid, pay].forEach(function (el) {
+    el.addEventListener("input", function () { err.textContent = ""; update(); });
+    el.addEventListener("change", update);
+  });
+  document.getElementById("form").addEventListener("submit", function (e) { e.preventDefault(); });
+
+  send.addEventListener("click", function (e) {
+    var u = uid.value.trim(), z = zid.value.trim();
+    var msg = "";
+    if (!/^\d{6,12}$/.test(u)) msg = "User ID harus berupa angka, 6 sampai 12 digit.";
+    else if (!/^\d{3,6}$/.test(z)) msg = "Zone ID harus berupa angka, 3 sampai 6 digit.";
+    if (msg) {
+      e.preventDefault();
+      err.textContent = msg;
+      (/^\d{6,12}$/.test(u) ? zid : uid).focus();
+    } else {
+      err.textContent = "";
+      update();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
